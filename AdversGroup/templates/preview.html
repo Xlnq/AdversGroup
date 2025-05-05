@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="preview-container">
+    <h1>Предпросмотр дизайна: {{ design.name }}</h1>
+
+    <div class="preview-actions">
+        <a href="{% url 'product_design_editor_existing' design.product.id design.id %}" class="btn btn-edit">
+            <i class="fas fa-edit"></i> Вернуться к редактированию
+        </a>
+        <a href="{% url 'generate_product_pdf' design.product.id design.id %}" class="btn btn-download">
+            <i class="fas fa-file-pdf"></i> Скачать PDF
+        </a>
+    </div>
+
+    <div class="design-specs">
+        <p><strong>Способ нанесения:</strong> {{ design.get_printing_method_display }}</p>
+        <p><strong>Сторона нанесения:</strong> {{ design.get_printing_side_display }}</p>
+    </div>
+
+    <div class="canvas-preview-wrapper">
+        <!-- Фронтальная сторона -->
+        {% if design.printing_side == 'front' or design.printing_side == 'both' %}
+        <div class="canvas-preview">
+            <h3>Лицевая сторона</h3>
+            <div class="preview-canvas-container">
+                <div class="preview-canvas-area">
+                    <img src="{% static 'images/shopper_base.png' %}" class="canvas-photo" alt="Лицевая сторона">
+                    <div class="design-elements">
+                        {% for element in design.elements.all %}
+                            {% if element.side == 'front' %}
+                            <div class="preview-element"
+                                 style="left: {{ element.x_position }}px;
+                                        top: {{ element.y_position }}px;
+                                        {% if element.width %}width: {{ element.width }}px;{% endif %}
+                                        {% if element.height %}height: {{ element.height }}px;{% endif %}
+                                        transform: rotate({{ element.rotation }}deg);
+                                        z-index: {{ element.z_index }};
+                                        opacity: {{ element.opacity }};">
+                                {% if element.element_type == 'text' %}
+                                <span style="color: {{ element.color|default:'#000000' }};
+                                            font-family: '{{ element.font_family|default:"Arial" }}';
+                                            font-size: {{ element.font_size|default:16 }}px;">
+                                    {{ element.content }}
+                                </span>
+                                {% elif element.element_type == 'image' %}
+                                <img src="{{ element.content.url }}"
+                                     style="width: 100%; height: 100%; object-fit: contain;">
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Тыльная сторона -->
+        {% if design.printing_side == 'back' or design.printing_side == 'both' %}
+        <div class="canvas-preview">
+            <h3>Обратная сторона</h3>
+            <div class="preview-canvas-container">
+                <div class="preview-canvas-area">
+                    <img src="{% static 'images/shopper_base_back.png' %}" class="canvas-photo" alt="Обратная сторона">
+                    <div class="design-elements">
+                        {% for element in design.elements.all %}
+                            {% if element.side == 'back' %}
+                            <div class="preview-element"
+                                 style="left: {{ element.x_position }}px;
+                                        top: {{ element.y_position }}px;
+                                        {% if element.width %}width: {{ element.width }}px;{% endif %}
+                                        {% if element.height %}height: {{ element.height }}px;{% endif %}
+                                        transform: rotate({{ element.rotation }}deg);
+                                        z-index: {{ element.z_index }};
+                                        opacity: {{ element.opacity }};">
+                                {% if element.element_type == 'text' %}
+                                <span style="color: {{ element.color|default:'#000000' }};
+                                            font-family: '{{ element.font_family|default:"Arial" }}';
+                                            font-size: {{ element.font_size|default:16 }}px;">
+                                    {{ element.content }}
+                                </span>
+                                {% elif element.element_type == 'image' %}
+                                <img src="{{ element.content.url }}"
+                                     style="width: 100%; height: 100%; object-fit: contain;">
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.preview-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.preview-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.design-specs {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.canvas-preview-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+.canvas-preview {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.preview-canvas-container {
+    position: relative;
+    width: 500px;
+    margin: 0 auto;
+}
+
+.preview-canvas-area {
+    position: relative;
+    width: 100%;
+}
+
+.canvas-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid #eee;
+}
+
+.design-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.preview-element {
+    position: absolute;
+    transform-origin: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-element span {
+    white-space: nowrap;
+}
+</style>
+{% endblock %}

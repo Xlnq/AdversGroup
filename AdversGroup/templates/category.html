@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="category-page">
+    <h1 class="page-title">{{ category_name }}</h1>
+    
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <div class="product-image">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                </a>
+            </div>
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="product-description">{{ product.description|truncatewords:20 }}</p>
+                <p class="product-price">{{ product.price }} ₽</p>
+                <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-primary">В корзину</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <p class="no-products">В данной категории пока нет товаров</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

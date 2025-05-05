@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="about-page">
+    <div class="container">
+        <h1 class="page-title">О нас</h1>
+
+        <div class="about-content">
+            <div class="about-image">
+                <img src="{% static 'images/About.png' %}" alt="О компании AdversGroup">
+            </div>
+            <div class="about-text">
+                <h2>ADVERSGROUP - Ваш надежный партнер</h2>
+                <p>Наша компания Advers Group предлагает комплексные рекламные услуги, направленные на создание эффективной фирменной продукции, специализируясь на производстве высококачественных сумок-шопперов с нанесением логотипов для корпоративных клиентов.</p>
+                
+                <div class="about-features">
+                    <div class="feature2">
+                        <h3>Качество</h3>
+                        <p>Используем только качественные материалы и современное оборудование</p>
+                    </div>
+                    <div class="feature2">
+                        <h3>Индивидуальный подход</h3>
+                        <p>Разрабатываем уникальный дизайн под ваши потребности</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="about-stats">
+            <div class="stat">
+                <h3>100+</h3>
+                <p>Довольных клиентов</p>
+            </div>
+            <div class="stat">
+                <h3>100+</h3>
+                <p>Выполненных заказов</p>
+            </div>
+            <div class="stat">
+                <h3>100%</h3>
+                <p>Гарантия качества</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

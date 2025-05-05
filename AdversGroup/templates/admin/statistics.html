@@ -1,0 +1,47 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Графики статистики</h1>
+
+<canvas id="ordersChart" width="600" height="300"></canvas>
+<canvas id="usersChart" width="600" height="300"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ordersData = {{ orders_data|safe }};
+    const usersData = {{ users_data|safe }};
+
+    const orderLabels = ordersData.map(item => item.month.slice(0, 7));
+    const orderCounts = ordersData.map(item => item.count);
+
+    const userLabels = usersData.map(item => item.month.slice(0, 7));
+    const userCounts = usersData.map(item => item.count);
+
+    new Chart(document.getElementById("ordersChart"), {
+        type: 'line',
+        data: {
+            labels: orderLabels,
+            datasets: [{
+                label: 'Количество заказов',
+                data: orderCounts,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.3,
+                fill: true
+            }]
+        }
+    });
+
+    new Chart(document.getElementById("usersChart"), {
+        type: 'line',
+        data: {
+            labels: userLabels,
+            datasets: [{
+                label: 'Количество пользователей',
+                data: userCounts,
+                borderColor: 'rgb(255, 99, 132)',
+                tension: 0.3,
+                fill: true
+            }]
+        }
+    });
+</script>
+{% endblock %}

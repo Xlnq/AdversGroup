@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="products-page">
+    <div class="container">
+        <h1 class="page-title">Наша продукция</h1>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.id %}" class="product-link">
+                    <div class="product-image">
+                        {% if product.main_images %}
+                            <img src="{{ product.main_images.0.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'images/no-image.png' %}" alt="Нет изображения">
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+
+                    <div class="product-meta">
+                        {% if product.material %}
+                            <span><strong>Материал:</strong> {{ product.material.name }}</span>
+                        {% endif %}
+                        {% if product.color %}
+                            <span><strong>Цвет:</strong> {{ product.color.name }}</span>
+                        {% endif %}
+                        {% if product.size %}
+                            <span><strong>Размер:</strong> {{ product.size.dimensions }}</span>
+                        {% endif %}
+                    </div>
+
+                    <p class="product-description">{{ product.description|truncatewords:20 }}</p>
+                    <p class="product-price">{{ product.price }} ₽</p>
+
+                    <form method="POST" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
+                        {% csrf_token %}
+                        <div class="quantity-selector">
+                            <label for="quantity">Количество:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1">
+                        </div>
+                        <button type="submit" class="btn-primary">Добавить в корзину</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <p class="no-products">Товары не найдены. Попробуйте изменить параметры поиска.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

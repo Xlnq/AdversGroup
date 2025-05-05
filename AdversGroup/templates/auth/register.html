@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-container">
+        <h1 class="page-title">Регистрация</h1>
+        
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'register' %}" class="auth-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Имя пользователя</label>
+                <input type="text" id="id_username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" id="id_email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password1">Пароль</label>
+                <input type="password" id="id_password1" name="password1" required>
+                <small class="form-text">Пароль должен содержать минимум 8 символов.</small>
+            </div>
+            <div class="form-group">
+                <label for="id_password2">Подтверждение пароля</label>
+                <input type="password" id="id_password2" name="password2" required>
+            </div>
+            <button type="submit" class="btn-primary">Зарегистрироваться</button>
+        </form>
+        
+        <div class="auth-links">
+            <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

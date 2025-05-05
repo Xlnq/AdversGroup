@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="cart-page">
+    <div class="container">
+        <h1 class="page-title">Корзина</h1>
+
+        {% if cart_items %}
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ item.product.main_image.image.url }}" alt="{{ item.product.name }}">
+                <div class="item-details">
+                    <h3>{{ item.product.name }}</h3>
+                    <p>Цена: {{ item.product.price }} ₽</p>
+                    <p>Количество: {{ item.quantity }}</p>
+                    <p>Итого: {{ item.total }} ₽</p>
+                    {% if item.product.id %}
+                        <form action="{% url 'update_cart_item' item.product.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="quantity-selector">
+                                <input type="number" id="quantity" name="quantity" value="1" min="1">
+                                <button type="submit" class="btn-primary">Обновить</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <p>Ошибка: Продукт не найден.</p>
+                    {% endif %}
+
+                    <a href="{% url 'remove_from_cart' item.product.id %}" class="btn-primary">Удалить</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="cart-summary">
+            <h3>Общая сумма: {{ total_price }} ₽</h3>
+            <a href="{% url 'checkout' %}" class="btn-primary">Оформить заказ</a>
+        </div>
+        {% else %}
+        <p class="empty-cart">Ваша корзина пуста</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

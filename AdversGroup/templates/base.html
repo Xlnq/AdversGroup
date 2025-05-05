@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>AdversGroup - Сумки-шопперы</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="{% static 'js/editor.js' %}"></script>
+</head>
+<body>
+    <nav class="header">
+        <div class="container">
+            <h1 class="logo">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'images/Logo_AdversGroup.png' %}" alt="Logo">
+                </a>
+            </h1>
+            <div class="search-sort">
+                <form method="GET" action="{% url 'product_list' %}" class="search-form">
+                    <input type="text" name="q" placeholder="Поиск..." value="{{ query|default:'' }}">
+                    <select name="sort">
+                        <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Новые</option>
+                        <option value="price" {% if sort == 'price' %}selected{% endif %}>По цене ↑</option>
+                        <option value="-price" {% if sort == '-price' %}selected{% endif %}>По цене ↓</option>
+                        <option value="name" {% if sort == 'name' %}selected{% endif %}>По названию</option>
+                    </select>
+                    <button type="submit">Найти</button>
+                </form>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'product_list' %}">ПРОДУКЦИЯ</a>
+                <a href="{% url 'about' %}">О НАС</a>
+                <a href="{% url 'contact' %}">КОНТАКТЫ</a>
+                <a href="{% url 'view_cart' %}">
+                    КОРЗИНА
+                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}">ПРОФИЛЬ</a>
+                    <a href="{% url 'logout' %}">ВЫЙТИ</a>
+                {% else %}
+                    <a href="{% url 'login' %}">ВОЙТИ</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="content-wrapper">
+                <main class="main">
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3>ADVERSGROUP</h3>
+                    <p>Ваш надежный партнер в создании корпоративной продукции</p>
+                </div>
+                <div>
+                    <h3>КОНТАКТЫ</h3>
+                    <p>
+                        Email: info@advers-group.ru<br>
+                        Офис: г. Москва
+                    </p>
+                </div>
+                <div>
+                    <h3>ВРЕМЯ РАБОТЫ</h3>
+                    <p>
+                        Пн–ПТ: 9:00 – 18:00<br>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© {% now "Y" %} ADVERSGROUP. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
